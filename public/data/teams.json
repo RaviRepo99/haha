@@ -1,0 +1,307 @@
+{
+  "teams": [
+    {
+      "id": "t_patron",
+      "name": "Patron",
+      "year": 2025
+    },
+    {
+      "id": "t_president_2025",
+      "name": "President",
+      "year": 2025
+    },
+    {
+      "id": "t_exec_2025",
+      "name": "BOD",
+      "year": 2025
+    },
+    {
+      "id": "t_faculty",
+      "name": "Faculty Advisors",
+      "year": 2025
+    },
+    {
+      "id": "t_graduates",
+      "name": "Graduates",
+      "year": 2025
+    }
+  ],
+  "members": [
+    {
+      "id": "1",
+      "name": "Ranjan Dulal",
+      "type": "Patron",
+      "title": "Patron",
+      "department": "HOD, Department of Computer Science",
+      "email": "haha@gmail.com",
+      "photo": "/media/2025/members/advisor.ranjandulal.jpg",
+      "year": 2025,
+      "member_year": 2025,
+      "teamId": "t_patron"
+    },
+    {
+      "id": "2",
+      "name": "Ankit Acharya",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": ""
+      },
+      "photo": "/media/2025/members/ankita.png",
+      "type": "President",
+      "teamId": "t_president_2025"
+    },
+    {
+      "id": "3",
+      "name": "Raghubir Mahato",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": ""
+      },
+      "photo": "/media/2025/members/waht.png",
+      "type": "Vice President",
+      "teamId": "t_president_2025"
+    },
+    {
+      "id": "4",
+      "name": "Utkrista Basnet",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": "",
+        "website": ""
+      },
+      "photo": "/media/2025/members/Utkrista.png",
+      "type": "Chief Innovation Director",
+      "teamId": "t_exec_2025"
+    },
+    {
+      "id": "5",
+      "name": "Suyog Bhuju",
+      "member_year": 2025,
+      "email": "",
+      "socials": {},
+      "photo": "/media/2025/members/It_head_Bhuju.png",
+      "type": "IT Head",
+      "teamId": "t_exec_2025"
+    },
+    {
+      "id": "6",
+      "name": "Bikash Pandeya",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": "",
+        "website": ""
+      },
+      "photo": "/media/2025/members/It_head_Pandeya.png",
+      "type": "IT Head",
+      "teamId": "t_exec_2025"
+    },
+    {
+      "id": "8",
+      "name": "Subina Tamang ",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": ""
+      },
+      "photo": "/media/2025/members/FB_IMG_1763204697206.jpg",
+      "type": "Program Incharge",
+      "teamId": "t_exec_2025"
+    },
+    {
+      "id": "9",
+      "name": "Sashwot Thapa",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": ""
+      },
+      "photo": "/media/2025/members/Gemini_Generated_Image_vqqsshvqqsshvqqs.png",
+      "type": "Program Incharge",
+      "teamId": "t_exec_2025"
+    },
+    {
+      "id": "10",
+      "name": "Pratikshya Shrestha",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "instagram": ""
+      },
+      "photo": "/media/2025/members/pratiksha.png",
+      "type": "Social Media Manager",
+      "teamId": "t_exec_2025"
+    },
+    {
+      "id": "11",
+      "name": "Sampanna Shibabhakti",
+      "member_year": 2025,
+      "email": "",
+      "socials": {},
+      "photo": "/media/2025/members/Spnsordirector_shibabhakti.png",
+      "type": "Sponsorship Director",
+      "teamId": "t_exec_2025"
+    },
+    {
+      "id": "7",
+      "name": "Bipasha Bhulan",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": "",
+        "website": ""
+      },
+      "photo": "/media/2025/members/Exec_Biapsha.png",
+      "type": "Executive Head",
+      "teamId": "t_exec_2025"
+    },
+    {
+      "id": "18",
+      "name": "Ankit Acharya",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": ""
+      },
+      "photo": "/media/2025/members/ankita.png",
+      "type": "Former President",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "19",
+      "name": "Raghubir Mahato",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": ""
+      },
+      "photo": "/media/2025/members/waht.png",
+      "type": "Former Vice President",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "20",
+      "name": "Utkrista Basnet",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": "",
+        "website": ""
+      },
+      "photo": "/media/2025/members/Utkrista.png",
+      "type": "Former Chief Innovation Director",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "21",
+      "name": "Suyog Bhuju",
+      "member_year": 2025,
+      "email": "",
+      "socials": {},
+      "photo": "/media/2025/members/It_head_Bhuju.png",
+      "type": "Former IT Head",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "22",
+      "name": "Bikash Pandeya",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": "",
+        "website": ""
+      },
+      "photo": "/media/2025/members/It_head_Pandeya.png",
+      "type": "Former IT Head",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "24",
+      "name": "Subina Tamang ",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": ""
+      },
+      "photo": "/media/2025/members/FB_IMG_1763204697206.jpg",
+      "type": "Former Program Incharge",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "25",
+      "name": "Sashwot Thapa",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": ""
+      },
+      "photo": "/media/2025/members/Gemini_Generated_Image_vqqsshvqqsshvqqs.png",
+      "type": "Former Program Incharge",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "26",
+      "name": "Pratikshya Shrestha",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "instagram": ""
+      },
+      "photo": "/media/2025/members/pratiksha.png",
+      "type": "Former Social Media Manager",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "27",
+      "name": "Sampanna Shibabhakti",
+      "member_year": 2025,
+      "email": "",
+      "socials": {},
+      "photo": "/media/2025/members/Spnsordirector_shibabhakti.png",
+      "type": "Former Sponsorship Director",
+      "teamId": "t_graduates"
+    },
+    {
+      "id": "23",
+      "name": "Bipasha Bhulan",
+      "member_year": 2025,
+      "email": "",
+      "socials": {
+        "github": "",
+        "linkedin": "",
+        "instagram": "",
+        "website": ""
+      },
+      "photo": "/media/2025/members/Exec_Biapsha.png",
+      "type": "Former Executive Head",
+      "teamId": "t_graduates"
+    }
+  ]
+}

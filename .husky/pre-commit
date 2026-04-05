@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Detect available package manager and run the lint script accordingly
+if command -v pnpm >/dev/null 2>&1; then
+  PM="pnpm"
+elif command -v yarn >/dev/null 2>&1; then
+  PM="yarn"
+else
+  PM="npm"
+fi
+
+if [ "$PM" = "yarn" ]; then
+  yarn lint || exit 1
+else
+  "$PM" run lint || exit 1
+fi
+
+# Stage any autofixes that eslint may have made
+git add -A

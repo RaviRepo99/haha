@@ -1,0 +1,41 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    if: github.repository == 'CCRC-Club/CCRC-Frontend'
+    runs-on: self-hosted
+
+    steps:
+      # 1. Checkout repository (default workspace)
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      # 2. Set up Node.js
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '24.x'
+          cache: 'npm'
+
+      # 4. Install dependencies and build
+      - name: Build dist folder
+        run: |
+          npm ci
+          npm run build
+
+      # 5. Sync dist to the directory Docker expects
+      - name: Update Docker dist folder
+        run: |
+          rsync -av --delete dist/ ~/CCRCITClub/frontend/dist/
+
+      # 6. Docker Compose deploy
+      - name: Docker deploy
+        run: |
+          cd ~/Server
+          docker compose down frontend-ccrc
+          docker compose up frontend-cccrc --build -d
