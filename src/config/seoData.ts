@@ -24,7 +24,7 @@ export const SITE_CONFIG = {
 
 export const SEO_PAGES = {
     home: {
-        title: "IT CLUB|Tech Community at CCRC",
+        title: "IT CLUB | Tech Community at CCRC",
         description: "Join CCRC IT CLUB Innovation & Tech Club) - the premier tech community at Capital College and Research Center (CCRC). Discover workshops, events, hackathons, and networking opportunities for aspiring tech enthusiasts.",
         keywords: "CCRC, computer club,ccrc club,ccrc tech club,ccrc tech community, IT club, tech community, CCRC, Nepal College, workshops, hackathons, tech events, programming, coding club",
         ogImage: "/media/og-team.avif",
