@@ -353,6 +353,20 @@ const Footer = memo(() => {
                         </a>
                         .
                     </p>
+
+                    <div className="flex flex-col items-center gap-2 text-base text-slate-600 dark:text-slate-400">
+                        <span className="font-medium uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 text-sm md:text-base">
+                            Affiliated by
+                        </span>
+                        <a href="https://ccrc.edu.np/" target="_blank" rel="noopener noreferrer" className="inline-flex">
+                            <img
+                                src="/media/2025/members/CCRCLogo.webp"
+                                alt="CCRC Logo"
+                                className="h-14 md:h-16 w-auto"
+                            />
+                        </a>
+                    </div>
+                    
                     <div className="flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                         <a href="#" className="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Privacy</a>
                         <a href="#" className="hover:text-white transition-colors">Terms</a>
