@@ -24,31 +24,31 @@ export const SITE_CONFIG = {
 
 export const SEO_PAGES = {
     home: {
-        title: "IT CLUB|Tech Community at CCRC",
+        title: "CCRC IT CLUB | Where Future Innovators Connect",
         description: "Join CCRC IT CLUB Innovation & Tech Club) - the premier tech community at Capital College and Research Center (CCRC). Discover workshops, events, hackathons, and networking opportunities for aspiring tech enthusiasts.",
         keywords: "CCRC, computer club,ccrc club,ccrc tech club,ccrc tech community, IT club, tech community, CCRC, Nepal College, workshops, hackathons, tech events, programming, coding club",
-        ogImage: "/media/og-team.avif",
+        ogImage: "/media/homeitclub.png",
         path: "/"
     },
     team: {
         title: "Our Team - IT CLUB | Meet the Club Leaders",
         description: "Meet the passionate team members of Computer Science Innovation & Tech Club (CCRC) - Executive Committee, Mentors, Faculty Advisors, and Patron driving innovation and tech education.",
         keywords: "CCRC team, computer club, tech club members, CCRC tech community, student tech leaders, executive committee",
-        ogImage: "/media/og-team.avif",
+        ogImage: "/media/homeitclub.png",
         path: "/team"
     },
     events: {
         title: "Events & Workshops - CCRC | Tech Events at CCRC",
         description: "Explore upcoming tech events and workshops at CCRC. Join hackathons, coding competitions, seminars, and networking sessions to enhance your tech skills.",
         keywords: "tech events, workshops, hackathons, coding competitions, tech seminars, CCRC events, CCRC tech community",
-        ogImage: "/media/og-team.avif",
+        ogImage: "/media/homeitclub.png",
         path: "/events"
     },
     join: {
         title: "Join CCRC IT CLUB - Club Membership Registration",
         description: "Reserve your spot and join CCRC IT CLUB (Computer Innovation & Tech Club) at CCRC. Fill out our membership form to become part of our thriving tech community and access exclusive workshops, events, and networking opportunities.",
         keywords: "join CCRC IT CLUB, club membership, CCRC IT CLUB registration, tech club join, CCRC tech community membership, student club registration",
-        ogImage: "/media/og-team.avif",
+        ogImage: "/media/homeitclub.png",
         path: "/join"
     }
 } as const;
