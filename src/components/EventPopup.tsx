@@ -35,9 +35,9 @@ const EventPopup = () => {
     if (!isVisible) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center pointer-events-none p-3 sm:p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-2 sm:p-4">
             <div
-                className="pointer-events-auto relative w-full max-w-xl translate-y-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-sm opacity-100 transition-all duration-150 ease-out dark:border-cyan-500/30 dark:bg-[#0f172a] dark:shadow-[0_0_15px_-6px_rgba(6,182,212,0.18)] sm:mb-4"
+                className="pointer-events-auto relative w-full max-w-md sm:max-w-xl translate-y-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 shadow-sm opacity-100 transition-all duration-150 ease-out dark:border-cyan-500/30 dark:bg-[#0f172a] dark:shadow-[0_0_15px_-6px_rgba(6,182,212,0.18)] sm:mb-4"
             >
                 {/* Background Decor */}
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
