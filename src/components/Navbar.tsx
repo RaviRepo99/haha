@@ -54,6 +54,7 @@ const Navbar = memo(() => {
         { name: 'About', href: '/#about', type: 'anchor' },
         { name: 'Events', href: '/events', type: 'route' },
         { name: 'Team', href: '/team', type: 'route' },
+        { name: 'Result', href: '/result', type: 'route' },
     ];
 
     const isActive = (path: string) => location.pathname === path;
@@ -143,8 +144,11 @@ const Navbar = memo(() => {
                                         <Link
                                             key={link.name}
                                             to={link.href}
-                                            onClick={handleHomeClick}
-                                            className={`text-xl font-bold transition-all ${isActive(link.href)
+                                            onClick={() => {
+                                                setIsMobileMenuOpen(false);
+                                                if (link.name === 'Home') handleHomeClick();
+                                            }}
+                                            className={`block w-full rounded-2xl px-4 py-4 text-xl font-bold transition-all ${isActive(link.href)
                                                 ? 'text-rose-600 dark:text-rose-500 translate-x-1'
                                                 : 'text-slate-700 dark:text-slate-300 hover:translate-x-1'
                                                 }`}
@@ -155,7 +159,7 @@ const Navbar = memo(() => {
                                         <a
                                             key={link.name}
                                             href={link.href}
-                                            className="text-xl font-bold text-slate-700 dark:text-slate-300 hover:translate-x-1 transition-transform"
+                                            className="block w-full rounded-2xl px-4 py-4 text-xl font-bold text-slate-700 dark:text-slate-300 hover:translate-x-1 transition-transform"
                                             onClick={() => setIsMobileMenuOpen(false)}
                                         >
                                             {link.name}
@@ -163,7 +167,8 @@ const Navbar = memo(() => {
                                     )
                                 ))}
 
-                                <div className="pt-8 border-t border-rose-100 dark:border-rose-900/10">
+                                <div className="pt-8 border-t border-rose-100 dark:border-rose-900/10 space-y-4">
+                                    {/* login removed */}
                                     <Link
                                         to="/join"
                                         className="flex items-center justify-center px-8 py-4 bg-rose-600 text-white font-bold rounded-2xl shadow-xl shadow-rose-500/20 w-fit min-w-[200px]"
@@ -185,6 +190,8 @@ const Navbar = memo(() => {
                     onClick={() => setIsMobileMenuOpen(false)}
                 />
             )}
+
+            {/* login removed */}
         </>
     );
 });
