@@ -10,6 +10,8 @@ const EventsPage = lazy(() => import('./pages/EventsPage'));
 const EventDetailsPage = lazy(() => import('./pages/EventDetailsPage'));
 const AIRegistrationPage = lazy(() => import('./pages/AIRegistrationPage'));
 const JoinClubPage = lazy(() => import('./pages/JoinClubPage'));
+const ResultPage = lazy(() => import('./pages/ResultPage'));
+const ResultViewPage = lazy(() => import('./pages/ResultViewPage'));
 
 function App() {
   return (
@@ -23,6 +25,8 @@ function App() {
             <Route path="/events/:id" element={<EventDetailsPage />} />
             <Route path="/register/ai" element={<AIRegistrationPage />} />
             <Route path="/join" element={<JoinClubPage />} />
+            <Route path="/result" element={<ResultPage />} />
+            <Route path="/result/view" element={<ResultViewPage />} />
           </Routes>
         </Suspense>
       </BaseLayout>
