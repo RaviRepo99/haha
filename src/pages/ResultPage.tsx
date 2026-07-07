@@ -150,7 +150,8 @@ const ResultPage = () => {
                             if (error) setError('');
                         }}
                         placeholder="Enter your full name"
-                        className="w-full rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-slate-900 outline-none transition focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 dark:border-red-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-red-500 dark:focus:bg-slate-900"
+                        className="w-full rounded-3xl border border-red-200 bg-red-50 px-5 py-4 text-base text-slate-900 outline-none transition focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-500/20 dark:border-red-700 dark:bg-slate-950 dark:text-slate-100 dark:focus:border-red-500 dark:focus:bg-slate-900"
+                        style={{ fontSize: 16 }}
                     />
 
                     {error && (
