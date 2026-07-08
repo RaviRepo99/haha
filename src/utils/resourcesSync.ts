@@ -15,6 +15,20 @@ const LEGACY_DELETED_KEY = 'ccrc-resources-deleted';
 const LEGACY_MEMBERS_KEY = 'ccrc-selected-members';
 const LEGACY_BUDGET_KEY = 'ccrc-resources-budget';
 
+const uniqueById = (items: ResourceItem[]) => {
+  const seen = new Set<string>();
+  return items.filter((item) => {
+    if (seen.has(item.id)) {
+      return false;
+    }
+
+    seen.add(item.id);
+    return true;
+  });
+};
+
+const uniqueStrings = (items: string[]) => Array.from(new Set(items));
+
 const buildDefaultState = (): ResourcePersistenceState => ({
   customResources: [],
   deletedInitialIds: [],
@@ -27,8 +41,8 @@ const normalizeState = (value: Partial<ResourcePersistenceState> | null | undefi
   const fallback = buildDefaultState();
 
   return {
-    customResources: Array.isArray(value?.customResources) ? value.customResources : fallback.customResources,
-    deletedInitialIds: Array.isArray(value?.deletedInitialIds) ? value.deletedInitialIds : fallback.deletedInitialIds,
+    customResources: Array.isArray(value?.customResources) ? uniqueById(value.customResources) : fallback.customResources,
+    deletedInitialIds: Array.isArray(value?.deletedInitialIds) ? uniqueStrings(value.deletedInitialIds) : fallback.deletedInitialIds,
     members: Array.isArray(value?.members) ? value.members : fallback.members,
     budget: value?.budget ? { total: value.budget.total ?? '', allocated: value.budget.allocated ?? '' } : fallback.budget,
     lastUpdated: value?.lastUpdated || fallback.lastUpdated,
@@ -159,7 +173,10 @@ export const persistResourceState = async (updates: Partial<ResourcePersistenceS
 
   try {
     if (supabaseClient) {
-      await supabaseClient.from('resources_state').upsert({ id: 'portal', payload: nextState }, { onConflict: 'id' });
+      const { error } = await supabaseClient.from('resources_state').upsert({ id: 'portal', payload: nextState }, { onConflict: 'id' });
+      if (error) {
+        console.warn('Supabase resources_state sync failed:', error.message);
+      }
       return nextState;
     }
 

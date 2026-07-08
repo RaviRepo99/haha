@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { categoryMeta, resources as initialResources } from '../data/resources';
 import type { ResourceCategory, ResourceItem } from '../types/resources.ts';
-import { getStoredResourceState, loadResourceState, persistResourceState } from '../utils/resourcesSync';
+import { loadResourceState, persistResourceState } from '../utils/resourcesSync';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   BadgeCheck,
@@ -40,6 +40,13 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 const formatDate = (value: string) =>
   new Date(value).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
+
+const isCustomResource = (resource: ResourceItem) => resource.id.startsWith('custom-');
+
+const buildVisibleResources = (deletedInitialIds: string[], customResources: ResourceItem[]) => [
+  ...initialResources.filter((resource) => !deletedInitialIds.includes(resource.id)),
+  ...customResources,
+];
 
 const ResourcePortalPage = () => {
   const navigate = useNavigate();
@@ -106,12 +113,14 @@ const ResourcePortalPage = () => {
   useEffect(() => {
     const syncFromStorage = async () => {
       const storedState = await loadResourceState();
-      const initialFiltered = initialResources.filter((resource) => !(storedState.deletedInitialIds || []).includes(resource.id));
-      setDeletedInitialIds(storedState.deletedInitialIds || []);
+      const nextDeletedInitialIds = storedState.deletedInitialIds || [];
+      const nextCustomResources = storedState.customResources || [];
+
+      setDeletedInitialIds(nextDeletedInitialIds);
       setMembers(storedState.members || []);
       setTotalBudget(storedState.budget?.total || '');
       setAllocatedBudget(storedState.budget?.allocated || '');
-      setResourcesState([...initialFiltered, ...(storedState.customResources || [])]);
+      setResourcesState(buildVisibleResources(nextDeletedInitialIds, nextCustomResources));
     };
 
     const handleSync = () => {
@@ -151,12 +160,15 @@ const ResourcePortalPage = () => {
       downloadUrl: uploadFileData || uploadDownloadUrl || uploadPreviewUrl || '',
     };
 
+    const customResources = resourcesState.filter(isCustomResource);
+
     const nextState = await persistResourceState({
-      customResources: [newRes, ...(getStoredResourceState().customResources || [])],
+      customResources: [newRes, ...customResources.filter((resource) => resource.id !== newRes.id)],
     });
 
-    const initialFiltered = initialResources.filter((resource) => !(nextState.deletedInitialIds || []).includes(resource.id));
-    setResourcesState([...initialFiltered, ...(nextState.customResources || [])]);
+    const nextDeletedInitialIds = nextState.deletedInitialIds || [];
+    setDeletedInitialIds(nextDeletedInitialIds);
+    setResourcesState(buildVisibleResources(nextDeletedInitialIds, nextState.customResources || []));
 
     setUploading(false);
     setShowUpload(false);
@@ -245,15 +257,13 @@ const ResourcePortalPage = () => {
   const handleDelete = async (id: string) => {
     if (!window.confirm('Delete this uploaded resource?')) return;
     if (id.startsWith('custom-')) {
-      const state = getStoredResourceState();
-      const nextCustom = (state.customResources || []).filter((resource) => resource.id !== id);
+      const nextCustom = resourcesState.filter((resource) => resource.id !== id && isCustomResource(resource));
       await persistResourceState({ customResources: nextCustom });
       setResourcesState((prev) => prev.filter((resource) => resource.id !== id));
       return;
     }
 
-    const state = getStoredResourceState();
-    const nextDeleted = Array.from(new Set([...(state.deletedInitialIds || []), id]));
+    const nextDeleted = Array.from(new Set([...deletedInitialIds, id]));
     await persistResourceState({ deletedInitialIds: nextDeleted });
     setDeletedInitialIds(nextDeleted);
     setResourcesState((prev) => prev.filter((resource) => resource.id !== id));
@@ -262,8 +272,7 @@ const ResourcePortalPage = () => {
   const clearCustomUploads = async () => {
     if (!window.confirm('Clear all uploaded resources? This cannot be undone.')) return;
     await persistResourceState({ customResources: [] });
-    const initialFiltered = initialResources.filter((resource) => !(deletedInitialIds || []).includes(resource.id));
-    setResourcesState([...initialFiltered]);
+    setResourcesState(buildVisibleResources(deletedInitialIds || [], []));
   };
 
   const handleLogout = () => {
