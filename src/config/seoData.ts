@@ -31,21 +31,21 @@ export const SEO_PAGES = {
         path: "/"
     },
     team: {
-        title: "Our Team - IT CLUB | Meet the Club Leaders",
+        title: "Meet the Team - IT CLUB | Meet the Club Leaders",
         description: "Meet the passionate team members of Computer Science Innovation & Tech Club (CCRC) - Executive Committee, Mentors, Faculty Advisors, and Patron driving innovation and tech education.",
         keywords: "CCRC team, computer club, tech club members, CCRC tech community, student tech leaders, executive committee",
         ogImage: "/media/homeitclub.png",
         path: "/team"
     },
     events: {
-        title: "Events & Workshops - CCRC | Tech Events at CCRC",
+        title: "Events - CCRC IT CLUB",
         description: "Explore upcoming tech events and workshops at CCRC. Join hackathons, coding competitions, seminars, and networking sessions to enhance your tech skills.",
         keywords: "tech events, workshops, hackathons, coding competitions, tech seminars, CCRC events, CCRC tech community",
         ogImage: "/media/homeitclub.png",
         path: "/events"
     },
     join: {
-        title: "Join CCRC IT CLUB - Club Membership Registration",
+        title: "Join us - IT CLUB",
         description: "Reserve your spot and join CCRC IT CLUB (Computer Innovation & Tech Club) at CCRC. Fill out our membership form to become part of our thriving tech community and access exclusive workshops, events, and networking opportunities.",
         keywords: "join CCRC IT CLUB, club membership, CCRC IT CLUB registration, tech club join, CCRC tech community membership, student club registration",
         ogImage: "/media/homeitclub.png",
