@@ -84,6 +84,8 @@ const getSupabasePayload = () => {
   return supabase;
 };
 
+type ResourceStateSyncHandler = () => void;
+
 const persistStateLocally = (nextState: ResourcePersistenceState) => {
   if (typeof window === 'undefined') {
     return;
@@ -100,24 +102,6 @@ const persistStateLocally = (nextState: ResourcePersistenceState) => {
   }
 
   window.dispatchEvent(new Event('ccrc-resources-sync'));
-};
-
-const mergeStates = (
-  localState: ResourcePersistenceState,
-  remoteState: ResourcePersistenceState | null | undefined,
-): ResourcePersistenceState => {
-  if (!remoteState) {
-    return localState;
-  }
-
-  const localTime = Date.parse(localState.lastUpdated || '0');
-  const remoteTime = Date.parse(remoteState.lastUpdated || '0');
-
-  if (remoteTime > localTime) {
-    return normalizeState(remoteState);
-  }
-
-  return localState;
 };
 
 export const getStoredResourceState = (): ResourcePersistenceState => {
@@ -160,9 +144,8 @@ export const loadResourceState = async (): Promise<ResourcePersistenceState> => 
       const { data, error } = await supabaseClient.from('resources_state').select('payload').eq('id', 'portal').maybeSingle();
       if (!error && data?.payload) {
         const remoteState = normalizeState(data.payload as ResourcePersistenceState);
-        const merged = mergeStates(localState, remoteState);
-        persistStateLocally(sanitizeStateForStorage(merged));
-        return merged;
+        persistStateLocally(sanitizeStateForStorage(remoteState));
+        return remoteState;
       }
     }
 
@@ -177,12 +160,43 @@ export const loadResourceState = async (): Promise<ResourcePersistenceState> => 
 
     const payload = await response.json().catch(() => null);
     const remoteState = normalizeState(payload && typeof payload === 'object' && 'customResources' in payload ? (payload as ResourcePersistenceState) : null);
-    const merged = mergeStates(localState, remoteState);
-    persistStateLocally(merged);
-    return merged;
+    if (remoteState) {
+      persistStateLocally(sanitizeStateForStorage(remoteState));
+      return remoteState;
+    }
+
+    return localState;
   } catch {
     return localState;
   }
+};
+
+export const subscribeToResourceState = (onChange: ResourceStateSyncHandler) => {
+  const supabaseClient = getSupabasePayload();
+
+  if (!supabaseClient) {
+    return () => {};
+  }
+
+  const channel = supabaseClient
+    .channel('resources_state_changes')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'resources_state',
+        filter: 'id=eq.portal',
+      },
+      () => {
+        onChange();
+      },
+    )
+    .subscribe();
+
+  return () => {
+    supabaseClient.removeChannel(channel);
+  };
 };
 
 export const persistResourceState = async (updates: Partial<ResourcePersistenceState>): Promise<ResourcePersistenceState> => {

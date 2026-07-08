@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 import { categoryMeta, resources as initialResources } from '../data/resources';
 import type { ResourceCategory, ResourceItem } from '../types/resources.ts';
-import { loadResourceState, persistResourceState } from '../utils/resourcesSync';
+import { loadResourceState, persistResourceState, subscribeToResourceState } from '../utils/resourcesSync';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   BadgeCheck,
@@ -142,6 +142,7 @@ const ResourcePortalPage = () => {
     document.addEventListener('visibilitychange', visibilityHandler);
 
     const refreshTimer = window.setInterval(handleSync, 5000);
+    const unsubscribeRealtime = subscribeToResourceState(handleSync);
 
     return () => {
       window.removeEventListener('ccrc-resources-sync', handleSync);
@@ -150,6 +151,7 @@ const ResourcePortalPage = () => {
       window.removeEventListener('online', handleSync);
       document.removeEventListener('visibilitychange', visibilityHandler);
       window.clearInterval(refreshTimer);
+      unsubscribeRealtime();
     };
   }, []);
 
