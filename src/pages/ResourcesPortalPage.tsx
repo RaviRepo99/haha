@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { categoryMeta, resources as initialResources } from '../data/resources';
 import type { ResourceCategory, ResourceItem } from '../types/resources.ts';
+import { getStoredResourceState, loadResourceState, persistResourceState } from '../utils/resourcesSync';
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   BadgeCheck,
@@ -39,61 +40,6 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 
 const formatDate = (value: string) =>
   new Date(value).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
-
-interface ResourcePersistenceState {
-  customResources: ResourceItem[];
-  deletedInitialIds: string[];
-  members: { id: string; name: string; email?: string }[];
-  budget: { total: string; allocated: string };
-}
-
-const STORAGE_KEY = 'ccrc-resources-sync';
-
-const getStoredResourceState = (): ResourcePersistenceState => {
-  if (typeof window === 'undefined') {
-    return { customResources: [], deletedInitialIds: [], members: [], budget: { total: '', allocated: '' } };
-  }
-
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved) as ResourcePersistenceState;
-      return {
-        customResources: parsed.customResources || [],
-        deletedInitialIds: parsed.deletedInitialIds || [],
-        members: parsed.members || [],
-        budget: parsed.budget || { total: '', allocated: '' },
-      };
-    }
-  } catch (e) {
-    // ignore and fall back to legacy keys below
-  }
-
-  try {
-    return {
-      customResources: JSON.parse(localStorage.getItem('ccrc-resources-custom') || '[]') as ResourceItem[],
-      deletedInitialIds: JSON.parse(localStorage.getItem('ccrc-resources-deleted') || '[]') as string[],
-      members: JSON.parse(localStorage.getItem('ccrc-selected-members') || '[]') as { id: string; name: string; email?: string }[],
-      budget: JSON.parse(localStorage.getItem('ccrc-resources-budget') || '{"total":"","allocated":""}') as { total: string; allocated: string },
-    };
-  } catch (e) {
-    return { customResources: [], deletedInitialIds: [], members: [], budget: { total: '', allocated: '' } };
-  }
-};
-
-const persistResourceState = (updates: Partial<ResourcePersistenceState>) => {
-  if (typeof window === 'undefined') {
-    return;
-  }
-
-  const nextState = { ...getStoredResourceState(), ...updates };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
-  localStorage.setItem('ccrc-resources-custom', JSON.stringify(nextState.customResources));
-  localStorage.setItem('ccrc-resources-deleted', JSON.stringify(nextState.deletedInitialIds));
-  localStorage.setItem('ccrc-selected-members', JSON.stringify(nextState.members));
-  localStorage.setItem('ccrc-resources-budget', JSON.stringify(nextState.budget));
-  window.dispatchEvent(new Event('ccrc-resources-sync'));
-};
 
 const ResourcePortalPage = () => {
   const navigate = useNavigate();
@@ -158,8 +104,8 @@ const ResourcePortalPage = () => {
   }, [category, search, sortBy, resourcesState]);
 
   useEffect(() => {
-    const syncFromStorage = () => {
-      const storedState = getStoredResourceState();
+    const syncFromStorage = async () => {
+      const storedState = await loadResourceState();
       const initialFiltered = initialResources.filter((resource) => !(storedState.deletedInitialIds || []).includes(resource.id));
       setDeletedInitialIds(storedState.deletedInitialIds || []);
       setMembers(storedState.members || []);
@@ -168,13 +114,17 @@ const ResourcePortalPage = () => {
       setResourcesState([...initialFiltered, ...(storedState.customResources || [])]);
     };
 
-    syncFromStorage();
-    window.addEventListener('ccrc-resources-sync', syncFromStorage);
-    window.addEventListener('storage', syncFromStorage);
+    const handleSync = () => {
+      void syncFromStorage();
+    };
+
+    void syncFromStorage();
+    window.addEventListener('ccrc-resources-sync', handleSync);
+    window.addEventListener('storage', handleSync);
 
     return () => {
-      window.removeEventListener('ccrc-resources-sync', syncFromStorage);
-      window.removeEventListener('storage', syncFromStorage);
+      window.removeEventListener('ccrc-resources-sync', handleSync);
+      window.removeEventListener('storage', handleSync);
     };
   }, []);
 
@@ -182,16 +132,17 @@ const ResourcePortalPage = () => {
     setFavorites((current) => (current.includes(id) ? current.filter((item) => item !== id) : [...current, id]));
   };
 
-  const handleUploadSubmit = (event: React.FormEvent) => {
+  const handleUploadSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setUploading(true);
     const id = `custom-${Date.now()}`;
+    const normalizedFileType = (uploadFileType || 'Document') as ResourceItem['fileType'];
     const newRes: ResourceItem = {
       id,
       title: uploadTitle || 'Untitled Resource',
       description: uploadDescription || '',
       category: (uploadCategory as ResourceCategory) || 'other',
-      fileType: (uploadFileType as any) || 'Document',
+      fileType: normalizedFileType,
       size: uploadSize || '0 KB',
       uploadedAt: new Date().toISOString().split('T')[0],
       downloads: 0,
@@ -200,16 +151,15 @@ const ResourcePortalPage = () => {
       downloadUrl: uploadFileData || uploadDownloadUrl || uploadPreviewUrl || '',
     };
 
-    setResourcesState((prev) => {
-      const next = [newRes, ...prev];
-      const state = getStoredResourceState();
-      persistResourceState({ customResources: [newRes, ...(state.customResources || [])] });
-      return next;
+    const nextState = await persistResourceState({
+      customResources: [newRes, ...(getStoredResourceState().customResources || [])],
     });
+
+    const initialFiltered = initialResources.filter((resource) => !(nextState.deletedInitialIds || []).includes(resource.id));
+    setResourcesState([...initialFiltered, ...(nextState.customResources || [])]);
 
     setUploading(false);
     setShowUpload(false);
-    // clear form
     setUploadTitle('');
     setUploadDescription('');
     setUploadPreviewUrl('');
@@ -271,47 +221,47 @@ const ResourcePortalPage = () => {
     reader.readAsDataURL(f);
   };
 
-  const handleAddMember = () => {
+  const handleAddMember = async () => {
     if (!memberName.trim()) return;
     const id = `member-${Date.now()}`;
     const next = [{ id, name: memberName.trim(), email: memberEmail.trim() || undefined }, ...members];
     setMembers(next);
-    persistResourceState({ members: next });
+    await persistResourceState({ members: next });
     setMemberName('');
     setMemberEmail('');
   };
 
-  const handleRemoveMember = (id: string) => {
+  const handleRemoveMember = async (id: string) => {
     const next = members.filter((m) => m.id !== id);
     setMembers(next);
-    persistResourceState({ members: next });
+    await persistResourceState({ members: next });
   };
 
-  const saveBudget = () => {
-    persistResourceState({ budget: { total: totalBudget, allocated: allocatedBudget } });
+  const saveBudget = async () => {
+    await persistResourceState({ budget: { total: totalBudget, allocated: allocatedBudget } });
     setShowBudget(false);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (!window.confirm('Delete this uploaded resource?')) return;
     if (id.startsWith('custom-')) {
-      setResourcesState((prev) => prev.filter((resource) => resource.id !== id));
       const state = getStoredResourceState();
       const nextCustom = (state.customResources || []).filter((resource) => resource.id !== id);
-      persistResourceState({ customResources: nextCustom });
+      await persistResourceState({ customResources: nextCustom });
+      setResourcesState((prev) => prev.filter((resource) => resource.id !== id));
       return;
     }
 
-    setResourcesState((prev) => prev.filter((resource) => resource.id !== id));
     const state = getStoredResourceState();
     const nextDeleted = Array.from(new Set([...(state.deletedInitialIds || []), id]));
-    persistResourceState({ deletedInitialIds: nextDeleted });
+    await persistResourceState({ deletedInitialIds: nextDeleted });
     setDeletedInitialIds(nextDeleted);
+    setResourcesState((prev) => prev.filter((resource) => resource.id !== id));
   };
 
-  const clearCustomUploads = () => {
+  const clearCustomUploads = async () => {
     if (!window.confirm('Clear all uploaded resources? This cannot be undone.')) return;
-    persistResourceState({ customResources: [] });
+    await persistResourceState({ customResources: [] });
     const initialFiltered = initialResources.filter((resource) => !(deletedInitialIds || []).includes(resource.id));
     setResourcesState([...initialFiltered]);
   };
