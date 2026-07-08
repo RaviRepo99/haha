@@ -144,38 +144,44 @@ const ResourcePortalPage = () => {
   const handleUploadSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setUploading(true);
-    const id = `custom-${Date.now()}`;
-    const normalizedFileType = (uploadFileType || 'Document') as ResourceItem['fileType'];
-    const newRes: ResourceItem = {
-      id,
-      title: uploadTitle || 'Untitled Resource',
-      description: uploadDescription || '',
-      category: (uploadCategory as ResourceCategory) || 'other',
-      fileType: normalizedFileType,
-      size: uploadSize || '0 KB',
-      uploadedAt: new Date().toISOString().split('T')[0],
-      downloads: 0,
-      previewType: uploadPreviewType,
-      previewUrl: uploadFileData || uploadPreviewUrl || uploadDownloadUrl || '',
-      downloadUrl: uploadFileData || uploadDownloadUrl || uploadPreviewUrl || '',
-    };
+    try {
+      const id = `custom-${Date.now()}`;
+      const normalizedFileType = (uploadFileType || 'Document') as ResourceItem['fileType'];
+      const newRes: ResourceItem = {
+        id,
+        title: uploadTitle || 'Untitled Resource',
+        description: uploadDescription || '',
+        category: (uploadCategory as ResourceCategory) || 'other',
+        fileType: normalizedFileType,
+        size: uploadSize || '0 KB',
+        uploadedAt: new Date().toISOString().split('T')[0],
+        downloads: 0,
+        previewType: uploadPreviewType,
+        previewUrl: uploadFileData || uploadPreviewUrl || uploadDownloadUrl || '',
+        downloadUrl: uploadFileData || uploadDownloadUrl || uploadPreviewUrl || '',
+      };
 
-    const customResources = resourcesState.filter(isCustomResource);
+      const customResources = resourcesState.filter(isCustomResource);
 
-    const nextState = await persistResourceState({
-      customResources: [newRes, ...customResources.filter((resource) => resource.id !== newRes.id)],
-    });
+      const nextState = await persistResourceState({
+        customResources: [newRes, ...customResources.filter((resource) => resource.id !== newRes.id)],
+      });
 
-    const nextDeletedInitialIds = nextState.deletedInitialIds || [];
-    setDeletedInitialIds(nextDeletedInitialIds);
-    setResourcesState(buildVisibleResources(nextDeletedInitialIds, nextState.customResources || []));
+      const nextDeletedInitialIds = nextState.deletedInitialIds || [];
+      setDeletedInitialIds(nextDeletedInitialIds);
+      setResourcesState(buildVisibleResources(nextDeletedInitialIds, nextState.customResources || []));
 
-    setUploading(false);
-    setShowUpload(false);
-    setUploadTitle('');
-    setUploadDescription('');
-    setUploadPreviewUrl('');
-    setUploadDownloadUrl('');
+      setShowUpload(false);
+      setUploadTitle('');
+      setUploadDescription('');
+      setUploadPreviewUrl('');
+      setUploadDownloadUrl('');
+    } catch (error) {
+      console.error('Upload failed:', error);
+      alert('Upload failed. Please try again.');
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
