@@ -129,17 +129,22 @@ Each subscriber object contains:
    - Create API endpoints for subscribe/unsubscribe
    - Add email verification
 
-2. **Email Integration**
+2. **Apply the Supabase Sync Table**
+   - Run the migration in `supabase/migrations/20260708_create_resources_state.sql`
+   - This creates the `resources_state` table required by `src/utils/resourcesSync.ts`
+   - The app falls back to local storage if Supabase is unavailable, but shared sync needs this table
+
+3. **Email Integration**
    - Set up welcome emails
    - Create newsletter system
    - Add unsubscribe functionality
 
-3. **Analytics**
+4. **Analytics**
    - Track subscription sources
    - Monitor engagement
    - A/B test different signup forms
 
-4. **Compliance**
+5. **Compliance**
    - Add GDPR compliance
    - Implement unsubscribe links
    - Add privacy policy
