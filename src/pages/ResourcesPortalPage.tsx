@@ -130,10 +130,26 @@ const ResourcePortalPage = () => {
     void syncFromStorage();
     window.addEventListener('ccrc-resources-sync', handleSync);
     window.addEventListener('storage', handleSync);
+    window.addEventListener('focus', handleSync);
+    window.addEventListener('online', handleSync);
+
+    const visibilityHandler = () => {
+      if (document.visibilityState === 'visible') {
+        handleSync();
+      }
+    };
+
+    document.addEventListener('visibilitychange', visibilityHandler);
+
+    const refreshTimer = window.setInterval(handleSync, 5000);
 
     return () => {
       window.removeEventListener('ccrc-resources-sync', handleSync);
       window.removeEventListener('storage', handleSync);
+      window.removeEventListener('focus', handleSync);
+      window.removeEventListener('online', handleSync);
+      document.removeEventListener('visibilitychange', visibilityHandler);
+      window.clearInterval(refreshTimer);
     };
   }, []);
 
