@@ -31,7 +31,7 @@ export const SEO_PAGES = {
         path: "/"
     },
     team: {
-        title: "Meet the Team - IT CLUB | Meet the Club Leaders",
+        title: "Meet the Team - IT CLUB",
         description: "Meet the passionate team members of Computer Science Innovation & Tech Club (CCRC) - Executive Committee, Mentors, Faculty Advisors, and Patron driving innovation and tech education.",
         keywords: "CCRC team, computer club, tech club members, CCRC tech community, student tech leaders, executive committee",
         ogImage: "/media/homeitclub.png",
