@@ -349,7 +349,7 @@ const Footer = memo(() => {
                             rel="noopener noreferrer"
                             className="hover:text-rose-600 dark:hover:text-rose-400 transition-colors font-semibold"
                         >
-                            Mitesh Mandal 
+                            Mitesh Mandal
                         </a>
                         .
                     </p>
@@ -366,7 +366,7 @@ const Footer = memo(() => {
                             />
                         </a>
                     </div>
-                    
+
                     <div className="flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                         <a href="#" className="hover:text-rose-600 dark:hover:text-rose-400 transition-colors">Privacy</a>
                         <a href="#" className="hover:text-white transition-colors">Terms</a>
