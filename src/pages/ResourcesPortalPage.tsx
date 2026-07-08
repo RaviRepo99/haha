@@ -40,6 +40,61 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 const formatDate = (value: string) =>
   new Date(value).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' });
 
+interface ResourcePersistenceState {
+  customResources: ResourceItem[];
+  deletedInitialIds: string[];
+  members: { id: string; name: string; email?: string }[];
+  budget: { total: string; allocated: string };
+}
+
+const STORAGE_KEY = 'ccrc-resources-sync';
+
+const getStoredResourceState = (): ResourcePersistenceState => {
+  if (typeof window === 'undefined') {
+    return { customResources: [], deletedInitialIds: [], members: [], budget: { total: '', allocated: '' } };
+  }
+
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved) as ResourcePersistenceState;
+      return {
+        customResources: parsed.customResources || [],
+        deletedInitialIds: parsed.deletedInitialIds || [],
+        members: parsed.members || [],
+        budget: parsed.budget || { total: '', allocated: '' },
+      };
+    }
+  } catch (e) {
+    // ignore and fall back to legacy keys below
+  }
+
+  try {
+    return {
+      customResources: JSON.parse(localStorage.getItem('ccrc-resources-custom') || '[]') as ResourceItem[],
+      deletedInitialIds: JSON.parse(localStorage.getItem('ccrc-resources-deleted') || '[]') as string[],
+      members: JSON.parse(localStorage.getItem('ccrc-selected-members') || '[]') as { id: string; name: string; email?: string }[],
+      budget: JSON.parse(localStorage.getItem('ccrc-resources-budget') || '{"total":"","allocated":""}') as { total: string; allocated: string },
+    };
+  } catch (e) {
+    return { customResources: [], deletedInitialIds: [], members: [], budget: { total: '', allocated: '' } };
+  }
+};
+
+const persistResourceState = (updates: Partial<ResourcePersistenceState>) => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const nextState = { ...getStoredResourceState(), ...updates };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+  localStorage.setItem('ccrc-resources-custom', JSON.stringify(nextState.customResources));
+  localStorage.setItem('ccrc-resources-deleted', JSON.stringify(nextState.deletedInitialIds));
+  localStorage.setItem('ccrc-selected-members', JSON.stringify(nextState.members));
+  localStorage.setItem('ccrc-resources-budget', JSON.stringify(nextState.budget));
+  window.dispatchEvent(new Event('ccrc-resources-sync'));
+};
+
 const ResourcePortalPage = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
@@ -103,31 +158,24 @@ const ResourcePortalPage = () => {
   }, [category, search, sortBy, resourcesState]);
 
   useEffect(() => {
-    // load deleted initial ids and custom resources from localStorage and merge
-    try {
-      const deleted = JSON.parse(localStorage.getItem('ccrc-resources-deleted') || '[]') as string[];
-      setDeletedInitialIds(deleted || []);
-      const saved = localStorage.getItem('ccrc-resources-custom');
-      const parsed: ResourceItem[] = saved ? JSON.parse(saved) : [];
-      const savedMembers = localStorage.getItem('ccrc-selected-members');
-      if (savedMembers) {
-        setMembers(JSON.parse(savedMembers));
-      }
-      const savedBudget = localStorage.getItem('ccrc-resources-budget');
-      if (savedBudget) {
-        try {
-          const b = JSON.parse(savedBudget);
-          setTotalBudget(b.total || '');
-          setAllocatedBudget(b.allocated || '');
-        } catch (e) {
-          // ignore
-        }
-      }
-      const initialFiltered = initialResources.filter((r) => !(deleted || []).includes(r.id));
-      setResourcesState([...initialFiltered, ...parsed]);
-    } catch (e) {
-      // ignore
-    }
+    const syncFromStorage = () => {
+      const storedState = getStoredResourceState();
+      const initialFiltered = initialResources.filter((resource) => !(storedState.deletedInitialIds || []).includes(resource.id));
+      setDeletedInitialIds(storedState.deletedInitialIds || []);
+      setMembers(storedState.members || []);
+      setTotalBudget(storedState.budget?.total || '');
+      setAllocatedBudget(storedState.budget?.allocated || '');
+      setResourcesState([...initialFiltered, ...(storedState.customResources || [])]);
+    };
+
+    syncFromStorage();
+    window.addEventListener('ccrc-resources-sync', syncFromStorage);
+    window.addEventListener('storage', syncFromStorage);
+
+    return () => {
+      window.removeEventListener('ccrc-resources-sync', syncFromStorage);
+      window.removeEventListener('storage', syncFromStorage);
+    };
   }, []);
 
   const toggleFavorite = (id: string) => {
@@ -152,16 +200,10 @@ const ResourcePortalPage = () => {
       downloadUrl: uploadFileData || uploadDownloadUrl || uploadPreviewUrl || '',
     };
 
-    // update state and persist only custom resources
     setResourcesState((prev) => {
       const next = [newRes, ...prev];
-      try {
-        const existingCustom = JSON.parse(localStorage.getItem('ccrc-resources-custom') || '[]');
-        existingCustom.unshift(newRes);
-        localStorage.setItem('ccrc-resources-custom', JSON.stringify(existingCustom));
-      } catch (e) {
-        localStorage.setItem('ccrc-resources-custom', JSON.stringify([newRes]));
-      }
+      const state = getStoredResourceState();
+      persistResourceState({ customResources: [newRes, ...(state.customResources || [])] });
       return next;
     });
 
@@ -234,7 +276,7 @@ const ResourcePortalPage = () => {
     const id = `member-${Date.now()}`;
     const next = [{ id, name: memberName.trim(), email: memberEmail.trim() || undefined }, ...members];
     setMembers(next);
-    localStorage.setItem('ccrc-selected-members', JSON.stringify(next));
+    persistResourceState({ members: next });
     setMemberName('');
     setMemberEmail('');
   };
@@ -242,49 +284,35 @@ const ResourcePortalPage = () => {
   const handleRemoveMember = (id: string) => {
     const next = members.filter((m) => m.id !== id);
     setMembers(next);
-    localStorage.setItem('ccrc-selected-members', JSON.stringify(next));
+    persistResourceState({ members: next });
   };
 
   const saveBudget = () => {
-    localStorage.setItem('ccrc-resources-budget', JSON.stringify({ total: totalBudget, allocated: allocatedBudget }));
+    persistResourceState({ budget: { total: totalBudget, allocated: allocatedBudget } });
     setShowBudget(false);
   };
 
   const handleDelete = (id: string) => {
     if (!window.confirm('Delete this uploaded resource?')) return;
     if (id.startsWith('custom-')) {
-      setResourcesState((prev) => prev.filter((r) => r.id !== id));
-      try {
-        const existingCustom: ResourceItem[] = JSON.parse(localStorage.getItem('ccrc-resources-custom') || '[]');
-        const next = existingCustom.filter((r) => r.id !== id);
-        localStorage.setItem('ccrc-resources-custom', JSON.stringify(next));
-      } catch (e) {
-        // ignore
-      }
+      setResourcesState((prev) => prev.filter((resource) => resource.id !== id));
+      const state = getStoredResourceState();
+      const nextCustom = (state.customResources || []).filter((resource) => resource.id !== id);
+      persistResourceState({ customResources: nextCustom });
       return;
     }
 
-    // initial resource - mark deleted in storage so it stays removed across reloads
-    setResourcesState((prev) => prev.filter((r) => r.id !== id));
-    try {
-      const existingDeleted: string[] = JSON.parse(localStorage.getItem('ccrc-resources-deleted') || '[]');
-      const next = Array.from(new Set([...(existingDeleted || []), id]));
-      localStorage.setItem('ccrc-resources-deleted', JSON.stringify(next));
-      setDeletedInitialIds(next);
-    } catch (e) {
-      // ignore
-    }
+    setResourcesState((prev) => prev.filter((resource) => resource.id !== id));
+    const state = getStoredResourceState();
+    const nextDeleted = Array.from(new Set([...(state.deletedInitialIds || []), id]));
+    persistResourceState({ deletedInitialIds: nextDeleted });
+    setDeletedInitialIds(nextDeleted);
   };
 
   const clearCustomUploads = () => {
     if (!window.confirm('Clear all uploaded resources? This cannot be undone.')) return;
-    try {
-      localStorage.removeItem('ccrc-resources-custom');
-    } catch (e) {
-      // ignore
-    }
-    // reset to initialResources filtered by deletedInitialIds
-    const initialFiltered = initialResources.filter((r) => !(deletedInitialIds || []).includes(r.id));
+    persistResourceState({ customResources: [] });
+    const initialFiltered = initialResources.filter((resource) => !(deletedInitialIds || []).includes(resource.id));
     setResourcesState([...initialFiltered]);
   };
 
@@ -413,7 +441,7 @@ const ResourcePortalPage = () => {
                       <button onClick={() => toggleFavorite(resource.id)} className={`rounded-full p-2 ${isFavorite ? 'text-amber-400' : 'text-slate-400'}`}>
                         <Star className={`h-5 w-5 ${isFavorite ? 'fill-current' : ''}`} />
                       </button>
-                      <button onClick={() => { handleDelete(resource.id); if (selectedResource?.id === resource.id) setSelectedResource(null); }} className="rounded-full p-2 text-rose-600 hover:bg-rose-50">
+                      <button type="button" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => { event.preventDefault(); event.stopPropagation(); handleDelete(resource.id); if (selectedResource?.id === resource.id) setSelectedResource(null); }} className="rounded-full p-2 text-rose-600 hover:bg-rose-50">
                         <Trash className="h-5 w-5" />
                       </button>
                     </div>
@@ -464,7 +492,7 @@ const ResourcePortalPage = () => {
               </div>
               <div className="flex items-center gap-2">
                 {selectedResource.id.startsWith('custom-') && (
-                  <button onClick={() => { handleDelete(selectedResource.id); setSelectedResource(null); }} className="rounded-full border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-600">
+                  <button type="button" onClick={(event) => { event.preventDefault(); event.stopPropagation(); handleDelete(selectedResource.id); setSelectedResource(null); }} className="rounded-full border border-rose-200 px-3 py-2 text-sm font-semibold text-rose-600">
                     <Trash className="h-4 w-4 inline" /> Delete
                   </button>
                 )}
