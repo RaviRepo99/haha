@@ -13,9 +13,8 @@ const JoinClubPage = lazy(() => import('./pages/JoinClubPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const ResourcesPortalPage = lazy(() => import('./pages/ResourcesPortalPage'));
 const RecentDownloadsPage = lazy(() => import('./pages/RecentDownloadsPage'));
-
-const ResultPage = () => <div className="p-8 text-center">Result page coming soon.</div>;
-const ResultViewPage = () => <div className="p-8 text-center">Result view coming soon.</div>;
+const ResultPage = lazy(() => import('./pages/ResultPage'));
+const ResultViewPage = lazy(() => import('./pages/ResultViewPage'));
 const FavoritesPage = () => <div className="p-8 text-center">Favorites page coming soon.</div>;
 
 function App() {
