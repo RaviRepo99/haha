@@ -29,6 +29,31 @@ const uniqueById = (items: ResourceItem[]) => {
 
 const uniqueStrings = (items: string[]) => Array.from(new Set(items));
 
+const INLINE_DATA_URL_LIMIT = 100_000;
+
+const shouldStripInlineUrl = (value: string) => {
+  if (!value.startsWith('data:')) {
+    return false;
+  }
+
+  if (value.startsWith('data:image/') || value.startsWith('data:video/')) {
+    return true;
+  }
+
+  return value.length > INLINE_DATA_URL_LIMIT;
+};
+
+const sanitizeResourceForStorage = (resource: ResourceItem): ResourceItem => ({
+  ...resource,
+  previewUrl: shouldStripInlineUrl(resource.previewUrl) ? '' : resource.previewUrl,
+  downloadUrl: shouldStripInlineUrl(resource.downloadUrl) ? '' : resource.downloadUrl,
+});
+
+const sanitizeStateForStorage = (state: ResourcePersistenceState): ResourcePersistenceState => ({
+  ...state,
+  customResources: state.customResources.map(sanitizeResourceForStorage),
+});
+
 const buildDefaultState = (): ResourcePersistenceState => ({
   customResources: [],
   deletedInitialIds: [],
@@ -64,11 +89,16 @@ const persistStateLocally = (nextState: ResourcePersistenceState) => {
     return;
   }
 
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
-  localStorage.setItem(LEGACY_CUSTOM_KEY, JSON.stringify(nextState.customResources));
-  localStorage.setItem(LEGACY_DELETED_KEY, JSON.stringify(nextState.deletedInitialIds));
-  localStorage.setItem(LEGACY_MEMBERS_KEY, JSON.stringify(nextState.members));
-  localStorage.setItem(LEGACY_BUDGET_KEY, JSON.stringify(nextState.budget));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+    localStorage.setItem(LEGACY_CUSTOM_KEY, JSON.stringify(nextState.customResources));
+    localStorage.setItem(LEGACY_DELETED_KEY, JSON.stringify(nextState.deletedInitialIds));
+    localStorage.setItem(LEGACY_MEMBERS_KEY, JSON.stringify(nextState.members));
+    localStorage.setItem(LEGACY_BUDGET_KEY, JSON.stringify(nextState.budget));
+  } catch {
+    // Keep the shared state flow working even when the browser storage quota is full.
+  }
+
   window.dispatchEvent(new Event('ccrc-resources-sync'));
 };
 
@@ -131,7 +161,7 @@ export const loadResourceState = async (): Promise<ResourcePersistenceState> => 
       if (!error && data?.payload) {
         const remoteState = normalizeState(data.payload as ResourcePersistenceState);
         const merged = mergeStates(localState, remoteState);
-        persistStateLocally(merged);
+        persistStateLocally(sanitizeStateForStorage(merged));
         return merged;
       }
     }
@@ -162,7 +192,9 @@ export const persistResourceState = async (updates: Partial<ResourcePersistenceS
     lastUpdated: new Date().toISOString(),
   });
 
-  persistStateLocally(nextState);
+  const storedState = sanitizeStateForStorage(nextState);
+
+  persistStateLocally(storedState);
 
   const endpoint = getSyncEndpoint();
   const supabaseClient = getSupabasePayload();
@@ -173,7 +205,7 @@ export const persistResourceState = async (updates: Partial<ResourcePersistenceS
 
   try {
     if (supabaseClient) {
-      const { error } = await supabaseClient.from('resources_state').upsert({ id: 'portal', payload: nextState }, { onConflict: 'id' });
+      const { error } = await supabaseClient.from('resources_state').upsert({ id: 'portal', payload: storedState }, { onConflict: 'id' });
       if (error) {
         console.warn('Supabase resources_state sync failed:', error.message);
       }
@@ -183,7 +215,7 @@ export const persistResourceState = async (updates: Partial<ResourcePersistenceS
     await fetch(endpoint, {
       method: 'POST',
       headers: { 'content-type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify(nextState),
+      body: JSON.stringify(storedState),
     });
   } catch {
     // Keep the local copy working even when the shared endpoint is unavailable.
