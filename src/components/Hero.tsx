@@ -103,7 +103,7 @@ const Hero = memo(() => {
                     {/* Stats / Interactive Elements */}
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5 md:gap-6 pt-10 sm:pt-14 border-t border-slate-200 dark:border-white/5 animate-fade-in [animation-delay:800ms]">
                         {[
-                            { label: 'Active Members', value: '15+', icon: Users, accent: 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-300' },
+                            { label: 'Active Members', value: '17+', icon: Users, accent: 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-300' },
                             { label: 'Events Hosted', value: '1+', icon: Calendar, accent: 'bg-rose-500/20 text-rose-600 dark:text-rose-300' },
                             { label: 'Projects Built', value: '3+', icon: Code2, accent: 'bg-lime-500/20 text-lime-600 dark:text-lime-300' },
                         ].map((stat, idx) => (
