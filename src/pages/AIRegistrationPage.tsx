@@ -40,12 +40,12 @@ const AIRegistrationPage = () => {
       <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 blur-3xl rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-16 sm:pt-20">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-12 sm:pt-16">
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.4 }}
-          className="max-w-5xl mx-auto text-center space-y-8 sm:space-y-12"
+          className="w-full max-w-full mx-auto text-center space-y-8 sm:space-y-12 text-slate-900 dark:text-white"
         >
           {/* Badge */}
           <motion.div
@@ -59,11 +59,11 @@ const AIRegistrationPage = () => {
 
           {/* Title & Description */}
           <div className="space-y-4">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent px-2">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 bg-clip-text text-transparent px-2 leading-tight">
               {!isExpired ? 'Competition Starts Officially' : 'The Arena is Open'}
             </h1>
 
-            <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
+            <p className="text-slate-600 dark:text-white text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
               {!isExpired
                 ? 'Prepare yourself. The AI Image Prompting challenge begins soon.'
                 : 'Register now for the AI Image Prompting Competition 2026.'}
@@ -104,19 +104,19 @@ const AIRegistrationPage = () => {
             animate={{ opacity: 1, y: 0 }}
             className="max-w-4xl mx-auto pt-8"
           >
-            <div className="backdrop-blur-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-700/50 rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-12 shadow-2xl">
-              <div className="max-w-2xl mx-auto">
+            <div className="backdrop-blur-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-700/50 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-2xl">
+              <div className="max-w-2xl mx-auto text-slate-900 dark:text-white">
                 <iframe
                   data-tally-src="https://tally.so/r/BzVKlY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
                   loading="lazy"
                   width="100%"
-                  height="1100"
+                  height="1000"
                   frameBorder="0"
                   marginHeight={0}
                   marginWidth={0}
                   title="AI Prompting"
                   className="tally-embed rounded-xl"
-                  style={{ minHeight: '1100px', minWidth: '100%' }}
+                  style={{ minHeight: '1000px', minWidth: '100%' }}
                 />
               </div>
             </div>
