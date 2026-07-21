@@ -73,7 +73,7 @@ const AIRegistrationPage = () => {
           {/* Rulebook Link */}
           <div>
             <a
-              href=""
+              href="https://drive.google.com/file/d/1I6gHhFUR0DvBr3-zMlWu4f7ydvEDB9cp/view"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
