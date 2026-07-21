@@ -105,18 +105,18 @@ const AIRegistrationPage = () => {
             className="max-w-4xl mx-auto pt-8"
           >
             <div className="backdrop-blur-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-700/50 rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-12 shadow-2xl overflow-hidden">
-              <div className="max-w-2xl mx-auto">
+              <div className="w-full">
                 <iframe
                   data-tally-src="https://tally.so/r/BzVKlY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
                   loading="lazy"
                   width="100%"
-                  height="600"
+                  height="1200"
                   frameBorder="0"
                   marginHeight={0}
                   marginWidth={0}
                   title="AI Prompting"
                   className="tally-embed rounded-xl"
-                  style={{ minHeight: '600px' }}
+                  style={{ minHeight: '1200px', minWidth: '100%' }}
                 />
               </div>
             </div>
@@ -128,4 +128,3 @@ const AIRegistrationPage = () => {
 };
 
 export default AIRegistrationPage;
-
