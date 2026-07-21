@@ -115,8 +115,8 @@ const AIRegistrationPage = () => {
                   marginHeight={0}
                   marginWidth={0}
                   title="AI Prompting"
-                  className="tally-embed rounded-xl"
-                  style={{ minHeight: '1200px', minWidth: '100%' }}
+                  className="tally-embed rounded-xl h-[1200px] sm:h-[1600px]"
+                  style={{ minWidth: '100%' }}
                 />
               </div>
             </div>
