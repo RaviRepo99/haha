@@ -102,7 +102,7 @@ const AIRegistrationPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="max-w-4xl mx-auto pt-8"
+            className="w-full max-w-full sm:max-w-3xl lg:max-w-2xl mx-auto pt-8"
           >
             <div className="backdrop-blur-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-700/50 rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-12 shadow-2xl overflow-hidden">
               <div className="w-full">
