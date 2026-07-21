@@ -110,13 +110,13 @@ const AIRegistrationPage = () => {
                   data-tally-src="https://tally.so/r/BzVKlY?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
                   loading="lazy"
                   width="100%"
-                  height="900"
+                  height="1500"
                   frameBorder="0"
                   marginHeight={0}
                   marginWidth={0}
                   title="AI Prompting"
-                  className="tally-embed rounded-xl h-[900px] sm:h-[1600px]"
-                  style={{ minHeight: '900px', minWidth: '100%' }}
+                  className="tally-embed rounded-xl h-[1500px] sm:h-[1600px]"
+                  style={{ minHeight: '1500px', minWidth: '100%' }}
                 />
               </div>
             </div>
