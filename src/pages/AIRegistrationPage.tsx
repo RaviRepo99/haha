@@ -33,14 +33,14 @@ const AIRegistrationPage = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen py-12 sm:py-16" >
+    <div className="relative min-h-screen py-8 sm:py-10" >
       {/* Background Effects */}
       <div className="absolute inset-0 bg-grid opacity-20 pointer-events-none" />
       <div className="absolute inset-0 bg-gradient-radial from-cyan-500/5 via-transparent to-transparent pointer-events-none" />
       <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 blur-3xl rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-500/10 blur-3xl rounded-full translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-24 sm:pt-32">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 pt-16 sm:pt-20">
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
