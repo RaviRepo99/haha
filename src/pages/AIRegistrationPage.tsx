@@ -54,7 +54,7 @@ const AIRegistrationPage = () => {
             className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full backdrop-blur-sm bg-white/80 dark:bg-slate-900/80 border border-cyan-500/20 mb-2 text-cyan-600 dark:text-cyan-400 text-xs sm:text-sm font-medium shadow-lg"
           >
             <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
-            IT FEST CCRC 2026
+            AI Image Prompting Competition
           </motion.div>
 
           {/* Title & Description */}
@@ -65,15 +65,15 @@ const AIRegistrationPage = () => {
 
             <p className="text-slate-600 dark:text-slate-400 text-sm sm:text-base md:text-lg max-w-2xl mx-auto px-4">
               {!isExpired
-                ? 'Prepare yourself. The IT FEST CCRC challenge begins soon.'
-                : 'Register now for the IT FEST CCRC 2026.'}
+                ? 'Prepare yourself. The AI Image Prompting challenge begins soon.'
+                : 'Register now for the AI Image Prompting Competition 2026.'}
             </p>
           </div>
 
           {/* Rulebook Link */}
           <div>
             <a
-              href="https://drive.google.com/file/d/1M0xMbQzkZHQmOZ0OQrt4KSxLasRQmElf/view?usp=sharing"
+              href="https://drive.google.com/file/d/1huoBP5mijSC2-fGAy8J9cUhPGf_wu64S/view"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-105"
@@ -107,7 +107,7 @@ const AIRegistrationPage = () => {
             <div className="backdrop-blur-sm bg-white/80 dark:bg-slate-900/80 border border-slate-200/50 dark:border-slate-700/50 rounded-2xl sm:rounded-3xl p-4 sm:p-8 md:p-12 shadow-2xl overflow-hidden">
               <div className="max-w-2xl mx-auto">
                 <iframe
-                  data-tally-src="https://tally.so/embed/WO5kYQ?alignLeft=1&transparentBackground=1&dynamicHeight=1"
+                  data-tally-src="https://tally.so/r/BzVKlY"
                   loading="lazy"
                   width="100%"
                   height="600"

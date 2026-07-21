@@ -1,12 +1,10 @@
 
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import X from 'lucide-react/dist/esm/icons/x';
 import ArrowRight from 'lucide-react/dist/esm/icons/arrow-right';
 
 const EventPopup = () => {
     const [isVisible, setIsVisible] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         // Show popup after a short delay for better UX
@@ -29,7 +27,7 @@ const EventPopup = () => {
     const handleRegister = () => {
         setIsVisible(false);
         sessionStorage.setItem('ai_event_popup_seen', 'true');
-        navigate('/result');
+        window.location.href = 'https://www.ccrcitclub.digital/register/ai';
     };
 
     if (!isVisible) return null;
@@ -51,7 +49,7 @@ const EventPopup = () => {
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 dark:bg-red-400 opacity-75"></span>
                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600 dark:bg-red-500"></span>
                             </span>
-                            <span className="text-xs font-semibold text-red-600 dark:text-red-400 tracking-wide uppercase">RESULTS LIVE</span>
+                            <span className="text-xs font-semibold text-red-600 dark:text-red-400 tracking-wide uppercase">Join Competition</span>
                         </div>
                         <button
                             onClick={handleClose}
@@ -64,8 +62,8 @@ const EventPopup = () => {
                     {/* Competiton Image */}
                     <div className="group relative aspect-video w-full overflow-hidden rounded-xl border border-slate-200 shadow-sm dark:border-cyan-500/20">
                         <img
-                            src="/media/resultxddd.png"
-                            alt="Join us CCRC 2026 - IT CLUB"
+                            src="/event/003/banner.png"
+                            alt="AI Prompt-to-Image Competition 2026"
                             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-102"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-white/80 dark:from-[#0f172a]/80 to-transparent opacity-60" />
@@ -74,10 +72,10 @@ const EventPopup = () => {
                     {/* Content */}
                     <div className="space-y-4 text-center sm:text-left">
                         <h3 className="bg-gradient-to-r from-slate-900 via-slate-700 to-slate-500 bg-clip-text text-2xl font-bold text-slate-900 text-transparent dark:from-white dark:via-cyan-200 dark:to-slate-400 dark:text-white">
-                            Interview Results Published
+                            AI PROMPT TO IMAGE COMPETITION 2026
                         </h3>
                         <p className="text-base leading-relaxed text-slate-600 dark:text-slate-300">
-                            The interview results for CCRC IT Club 2026 are now available. Click "View Results" to find out your status.
+                            The CCRC IT Club AI Prompt-to-Image Competition 2026 is now live! Click "Register Now" to participate, create stunning AI art, and compete for exciting prizes.
                         </p>
                     </div>
 
@@ -86,7 +84,7 @@ const EventPopup = () => {
                         onClick={handleRegister}
                         className="group relative flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 px-5 py-3 text-base font-semibold text-white transition-all duration-200 hover:from-cyan-500 hover:to-blue-500 active:scale-[0.98]"
                     >
-                        <span>View Result</span>
+                        <span>Register Now</span>
                         <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
                     </button>
                 </div>
