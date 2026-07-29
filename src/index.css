@@ -95,6 +95,25 @@
   animation: slide-in-up 450ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
+@keyframes loader-fade {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#main-loading-screen {
+  animation: loader-fade 420ms ease-out;
+}
+
+body.loading-disabled {
+  overflow: hidden;
+}
+
 @keyframes letter-pop {
   0% {
     opacity: 0;

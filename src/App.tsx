@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react';
 import { Navigate, Routes, Route, useLocation } from 'react-router-dom';
 import BaseLayout from './components/BaseLayout';
 import ErrorBoundary from './components/ErrorBoundary';
-import LoadingFallback from './components/LoadingFallback';
 
 const HomePage = lazy(() => import('./pages/HomePage'));
 const TeamPage = lazy(() => import('./pages/TeamPage'));
@@ -23,7 +22,7 @@ function App() {
   const isAuthenticated = typeof window !== 'undefined' && localStorage.getItem('ccrc-resources-auth') === 'true';
 
   const appRoutes = (
-    <Suspense fallback={<LoadingFallback />}>
+    <Suspense>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/team" element={<TeamPage />} />
@@ -44,7 +43,11 @@ function App() {
 
   return (
     <ErrorBoundary>
-      {isPortalRoute ? appRoutes : <BaseLayout>{appRoutes}</BaseLayout>}
+      <div className="relative overflow-hidden">
+        <div className="opacity-100 transition-opacity duration-300">
+          {isPortalRoute ? appRoutes : <BaseLayout>{appRoutes}</BaseLayout>}
+        </div>
+      </div>
     </ErrorBoundary>
   );
 }

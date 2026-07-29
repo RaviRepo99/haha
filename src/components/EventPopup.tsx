@@ -5,37 +5,78 @@ import ArrowRight from 'lucide-react/dist/esm/icons/arrow-right';
 
 const EventPopup = () => {
     const [isVisible, setIsVisible] = useState(false);
+    const closeOnBackdropClick = true;
+
+    const closePopup = () => {
+        setIsVisible(false);
+    };
 
     useEffect(() => {
-        // Show popup after a short delay for better UX
         const timer = setTimeout(() => {
-            const hasSeenPopup = sessionStorage.getItem('ai_event_popup_seen');
-            if (!hasSeenPopup) {
-                setIsVisible(true);
-            }
+            setIsVisible(true);
         }, 1000);
 
         return () => clearTimeout(timer);
     }, []);
 
-    const handleClose = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setIsVisible(false);
-        sessionStorage.setItem('ai_event_popup_seen', 'true');
+    useEffect(() => {
+        if (!isVisible) {
+            return;
+        }
+
+        const originalBodyOverflow = document.body.style.overflow;
+        const originalBodyTouchAction = document.body.style.touchAction;
+        const originalBodyOverscrollBehavior = document.body.style.overscrollBehavior;
+        const originalHtmlOverflow = document.documentElement.style.overflow;
+
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+        document.body.style.overscrollBehavior = 'none';
+        document.documentElement.style.overflow = 'hidden';
+
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                closePopup();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.body.style.overflow = originalBodyOverflow;
+            document.body.style.touchAction = originalBodyTouchAction;
+            document.body.style.overscrollBehavior = originalBodyOverscrollBehavior;
+            document.documentElement.style.overflow = originalHtmlOverflow;
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isVisible]);
+
+    const handleClose = (e?: React.MouseEvent) => {
+        e?.stopPropagation();
+        closePopup();
+    };
+
+    const handleOverlayClick = (e: React.MouseEvent) => {
+        if (closeOnBackdropClick && e.target === e.currentTarget) {
+            closePopup();
+        }
     };
 
     const handleRegister = () => {
-        setIsVisible(false);
-        sessionStorage.setItem('ai_event_popup_seen', 'true');
+        closePopup();
         window.location.href = 'https://www.ccrcitclub.digital/register/ai';
     };
 
     if (!isVisible) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none p-2 sm:p-4">
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-2 sm:p-4 backdrop-blur-[2px]"
+            onClick={handleOverlayClick}
+        >
             <div
-                className="pointer-events-auto relative w-full max-w-md sm:max-w-xl translate-y-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 shadow-sm opacity-100 transition-all duration-150 ease-out dark:border-cyan-500/30 dark:bg-[#0f172a] dark:shadow-[0_0_15px_-6px_rgba(6,182,212,0.18)] sm:mb-4"
+                className="relative w-full max-w-md sm:max-w-xl translate-y-0 overflow-hidden rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 shadow-sm opacity-100 transition-all duration-150 ease-out dark:border-cyan-500/30 dark:bg-[#0f172a] dark:shadow-[0_0_15px_-6px_rgba(6,182,212,0.18)] sm:mb-4"
+                onClick={(e) => e.stopPropagation()}
             >
                 {/* Background Decor */}
                 <div className="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />

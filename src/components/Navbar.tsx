@@ -3,7 +3,6 @@ import Menu from 'lucide-react/dist/esm/icons/menu';
 import X from 'lucide-react/dist/esm/icons/x';
 import ChevronRight from 'lucide-react/dist/esm/icons/chevron-right';
 import { Link, useLocation } from 'react-router-dom';
-import ThemeToggle from './ThemeToggle';
 
 const Navbar = memo(() => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -109,12 +108,11 @@ const Navbar = memo(() => {
                                 ))}
                             </div>
 
-                            {/* Desktop Action & Theme Toggle */}
+                            {/* Desktop Action */}
                             <div className="hidden md:flex items-center gap-4">
-                                <ThemeToggle />
                                 <Link
                                     to="/join"
-                                    className="group relative px-6 py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold rounded-full overflow-hidden hover:bg-slate-800 dark:hover:bg-cyan-50 transition-colors"
+                                    className="group relative px-6 py-2.5 bg-slate-900 text-white font-semibold rounded-full overflow-hidden hover:bg-slate-800 transition-colors"
                                 >
                                     <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-cyan-300 to-blue-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl" />
                                     <span className="relative flex items-center gap-2">
@@ -127,11 +125,10 @@ const Navbar = memo(() => {
                             <div className="flex md:hidden items-center gap-3">
                                 <button
                                     onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                                    className="p-2.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all active:scale-90"
+                                    className="p-2.5 rounded-full bg-slate-100 text-slate-600 transition-all active:scale-90"
                                 >
                                     {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
                                 </button>
-                                <ThemeToggle />
                             </div>
                         </div>
 
