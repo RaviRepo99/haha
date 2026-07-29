@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Navigate, Routes, Route, useLocation } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import BaseLayout from './components/BaseLayout';
 import ErrorBoundary from './components/ErrorBoundary';
 import MainLoadingScreen from './components/MainLoadingScreen';
@@ -73,6 +74,7 @@ function App() {
         </Suspense>
       </div>
       {isLoaderVisible && <MainLoadingScreen isFadingOut={isAppReady} />}
+      <Analytics />
     </ErrorBoundary>
   );
 }

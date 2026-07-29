@@ -1,9 +1,9 @@
 export const SITE_CONFIG = {
-    name: "IT CLUB (CCRC)",
+    name: "CCRC IT CLUB",
     fullName: "IT CLUB (CCRC)",
-    url: "https://ccrc.edu.np",
+    url: "https://ccrcitclub.digital",
     description: "IT CLUB at Capital College and Research Center - Innovate. Connect. Transform",
-    logo: "https://ccrc.edu.np/favicon/favicon.ico",
+    logo: "https://ccrcitclub.digital/favicon/favicon.ico",
     email: "itclub@ccrc.edu.np",
     foundingDate: "2011",
     location: {
@@ -12,7 +12,7 @@ export const SITE_CONFIG = {
         city: "Lalitpur",
         coordinates: {
             latitude: "27.671419683136147",
-            longitude: " 85.33875975286703"
+            longitude: "85.33875975286703"
         }
     },
     social: {
@@ -25,8 +25,8 @@ export const SITE_CONFIG = {
 export const SEO_PAGES = {
     home: {
         title: "CCRC IT CLUB | Where Future Innovators Connect",
-        description: "Join CCRC IT CLUB Innovation & Tech Club) - the premier tech community at Capital College and Research Center (CCRC). Discover workshops, events, hackathons, and networking opportunities for aspiring tech enthusiasts.",
-        keywords: "CCRC, computer club,ccrc club,ccrc tech club,ccrc tech community, IT club, tech community, CCRC, Nepal College, workshops, hackathons, tech events, programming, coding club",
+        description: "Join CCRC IT CLUB - the premier tech community at Capital College and Research Center. Discover workshops, events, hackathons, and networking opportunities for aspiring tech enthusiasts.",
+        keywords: "CCRC, computer club,ccrc club,ccrc tech club,ccrc tech community, IT club, tech community, CCRC, workshops, hackathons, tech events, programming, coding club",
         ogImage: "/media/homeitclub.png",
         path: "/"
     },
@@ -46,7 +46,7 @@ export const SEO_PAGES = {
     },
     join: {
         title: "Join us - IT CLUB",
-        description: "Reserve your spot and join CCRC IT CLUB (Computer Innovation & Tech Club) at CCRC. Fill out our membership form to become part of our thriving tech community and access exclusive workshops, events, and networking opportunities.",
+        description: "Reserve your spot and join CCRC IT CLUB at CCRC. Fill out our membership form to become part of our thriving tech community and access exclusive workshops, events, and networking opportunities.",
         keywords: "join CCRC IT CLUB, club membership, CCRC IT CLUB registration, tech club join, CCRC tech community membership, student club registration",
         ogImage: "/media/homeitclub.png",
         path: "/join"
@@ -86,12 +86,7 @@ export const getWebsiteSchema = () => ({
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": SITE_CONFIG.name,
-    "url": SITE_CONFIG.url,
-    "potentialAction": {
-        "@type": "SearchAction",
-        "target": `${SITE_CONFIG.url}/search?q={search_term_string}`,
-        "query-input": "required name=search_term_string"
-    }
+    "url": SITE_CONFIG.url
 });
 
 export const getPersonSchema = (member: {

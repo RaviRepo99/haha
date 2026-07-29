@@ -2,10 +2,8 @@
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https:// ccrcitclub.digital/sitemap.xml
+Sitemap: https://ccrcitclub.digital/sitemap.xml
+Host: ccrcitclub.digital
 
-# Crawl-delay (optional, adjust as needed)
-Crawl-delay: 1
-
+# Optional: do not index API endpoints if any exist
 Disallow: /api/
